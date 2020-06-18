@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">QuickChat</string>
+
+    <string name="need_an_account">Need an account</string>
+    <string name="welcome_to_quickchat_app">Welcome to QuickChat App</string>
+    <string name="full_name">Full Name</string>
+    <string name="create_account">Create Account</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="logout">Logout</string>
+    <string name="account_settings">Account Settings</string>
+    <string name="all_users">All Users</string>
+    <string name="create_a_newaccount">Create a NewAccount</string>
+    <string name="textview">TextView</string>
+
+
+    <string name="create_a_new_account">Create a New Account</string>
+    <string name="sing_up">Sing Up</string>
+    <string name="login_to_your_account">Login to your Account</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="display_name">Display Name</string>
+    <string name="hey_there_i_m_using_quickchat_app">Hey There,I\'m using QuickChat App</string>
+    <string name="change_image">Change Image</string>
+    <string name="change_status">Change Status</string>
+
+
+    <string name="welcome_to_quickchat">Welcome To QuickChat</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
+    <string name="hint">hint</string>
+    <string name="save_changes">Save Changes</string>
+
+
+</resources>
