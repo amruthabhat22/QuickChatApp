@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.Random;
@@ -39,7 +41,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Button mChangeStatusBtn,mImageBtn;
     private StorageReference mProfileImage;
     private static final int GALLARY_PIC = 1;
-
+    private ProgressDialog mProgressDialog;
 
 
 
@@ -56,7 +58,8 @@ public class SettingsActivity extends AppCompatActivity {
         mChangeStatusBtn = (Button) findViewById(R.id.settings_change_status);
         mImageBtn = (Button) findViewById(R.id.settings_change_img);
         mcurrentUser= FirebaseAuth.getInstance().getCurrentUser();
-        String current_userId=mcurrentUser.getUid();
+        String current_userId= mcurrentUser.getUid();
+
 
         mDatabase= FirebaseDatabase.getInstance().getReference().child("user").child(current_userId);
 
@@ -73,6 +76,8 @@ public class SettingsActivity extends AppCompatActivity {
 
                mdisplayname.setText(name);
                mstatus.setText(status);
+
+                Picasso.get().load(image).fit().centerCrop().into(mDisplayImage);
             }
 
             @Override
@@ -102,6 +107,7 @@ public class SettingsActivity extends AppCompatActivity {
                intent.setType("image/*");
                intent.setAction(Intent.ACTION_GET_CONTENT);
                startActivityForResult(Intent.createChooser(intent,"Select Image"),GALLARY_PIC);
+
             }
         });
     }
@@ -111,6 +117,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GALLARY_PIC && resultCode == RESULT_OK){
             Uri imageUri = data.getData();
+
             CropImage.activity(imageUri)
                     .setAspectRatio(1,1)
                     .start(SettingsActivity.this);
@@ -118,16 +125,36 @@ public class SettingsActivity extends AppCompatActivity {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
+                mProgressDialog = new ProgressDialog(SettingsActivity.this);
+                mProgressDialog.setTitle("Uploading Images..");
+                mProgressDialog.setMessage("Please wait a while");
+                mProgressDialog.setCanceledOnTouchOutside(false);
+                mProgressDialog.show();
+
+
                 Uri resultUri = result.getUri();
-                StorageReference filePath = mProfileImage.child("profile_images").child(random() + ".jpg");
+                String userId=mcurrentUser.getUid();
+                StorageReference filePath = mProfileImage.child("profile_images").child(userId + ".jpg");
                 filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if(task.isSuccessful()){
-                            Toast.makeText(SettingsActivity.this,"Working", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(SettingsActivity.this,"Working", Toast.LENGTH_LONG).show();
+                            String download_url= task.getResult().getStorage().getDownloadUrl().toString();
+
+                            mDatabase.child("image").setValue(download_url).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        mProgressDialog.dismiss();
+                                    }
+                                }
+                            });
+
 
                         }else{
                             Toast.makeText(SettingsActivity.this,"Error", Toast.LENGTH_LONG).show();
+                            mProgressDialog.dismiss();
                         }
                     }
                 });

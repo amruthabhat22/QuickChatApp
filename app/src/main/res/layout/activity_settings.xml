@@ -5,21 +5,21 @@
     android:id="@+id/settings_dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="#FFFFFF"
     tools:context=".SettingsActivity">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/settings_display_pic"
-        android:layout_width="211dp"
+        android:layout_width="254dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="102dp"
-        android:layout_marginTop="66dp"
-        android:layout_marginEnd="98dp"
-        android:background="@color/colorPrimaryDark"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="67dp"
+        android:layout_marginEnd="77dp"
+        android:background="#FFFFFF"
         android:src="@drawable/dpp" />
 
     <TextView
@@ -29,6 +29,8 @@
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_marginBottom="350dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
         android:maxLines="1"
         android:text="@string/display_name"
         android:textAlignment="center"
@@ -43,6 +45,8 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="273dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
         android:maxLines="1"
         android:text="@string/hey_there_i_m_using_quickchat_app"
         android:textAlignment="center"
