@@ -1,15 +1,20 @@
 package com.example.quickchat;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -17,6 +22,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+
+import java.util.Random;
 
 
 public class SettingsActivity extends AppCompatActivity {
@@ -26,7 +37,8 @@ public class SettingsActivity extends AppCompatActivity {
     private FirebaseUser mcurrentUser;
     private DatabaseReference mDatabase;
     private Button mChangeStatusBtn,mImageBtn;
-
+    private StorageReference mProfileImage;
+    private static final int GALLARY_PIC = 1;
 
 
 
@@ -38,6 +50,8 @@ public class SettingsActivity extends AppCompatActivity {
         mDisplayImage = (CircleImageView)findViewById(R.id.settings_display_pic);
         mdisplayname=(TextView)findViewById(R.id.settings_display_name);
         mstatus=(TextView)findViewById(R.id.settings_status);
+        mProfileImage = FirebaseStorage.getInstance().getReference();
+
 
         mChangeStatusBtn = (Button) findViewById(R.id.settings_change_status);
         mImageBtn = (Button) findViewById(R.id.settings_change_img);
@@ -78,7 +92,61 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-
-
+        mImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*CropImage.activity()
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .start(SettingsActivity.this);*/
+               Intent intent = new Intent();
+               intent.setType("image/*");
+               intent.setAction(Intent.ACTION_GET_CONTENT);
+               startActivityForResult(Intent.createChooser(intent,"Select Image"),GALLARY_PIC);
+            }
+        });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GALLARY_PIC && resultCode == RESULT_OK){
+            Uri imageUri = data.getData();
+            CropImage.activity(imageUri)
+                    .setAspectRatio(1,1)
+                    .start(SettingsActivity.this);
+        }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                StorageReference filePath = mProfileImage.child("profile_images").child(random() + ".jpg");
+                filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(SettingsActivity.this,"Working", Toast.LENGTH_LONG).show();
+
+                        }else{
+                            Toast.makeText(SettingsActivity.this,"Error", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+            }
+
+            }
+
+    public static String random(){
+        Random generator = new Random();
+        StringBuilder randomStringBuilder = new StringBuilder();
+        int randomLength = generator.nextInt(10);
+        char tempChar;
+        for (int i = 0 ; i < randomLength ; i++){
+            tempChar = (char) (generator.nextInt(96)+32);
+            randomStringBuilder.append(tempChar);
+        }
+        return randomStringBuilder.toString();
+    }
+
 }
+
