@@ -4,9 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -26,10 +28,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Random;
+import id.zelory.compressor.Compressor;
 
 
 public class SettingsActivity extends AppCompatActivity {
@@ -73,11 +80,29 @@ public class SettingsActivity extends AppCompatActivity {
                 String image_tumbnail = dataSnapshot.child("thumb_image").getValue().toString();
 
 
+              Picasso.get().load(image).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.dpp).error(R.drawable.dpp).into(mDisplayImage, new Callback() {
+                  @Override
+                  public void onSuccess() {
+//Toast.makeText(SettingsActivity.this,"SUCCESS",Toast.LENGTH_LONG).show();
+                  }
+
+                  @Override
+                  public void onError(Exception e) {
+                      Picasso.get().load(image).placeholder(R.drawable.dpp).error(R.drawable.dpp).into(mDisplayImage);
+
+                  }
+              });
 
                mdisplayname.setText(name);
                mstatus.setText(status);
+               if (!image.equals("default")){
+                   Picasso.get().load(image).placeholder(R.drawable.dpp).into(mDisplayImage);
+               }
 
-                Picasso.get().load(image).fit().centerCrop().into(mDisplayImage);
+
+               //Picasso.get().load(image).resize(406,448).centerCrop().into(mDisplayImage);
+               //Picasso.get().load(image).fit().centerCrop().into(mDisplayImage);
+                //Picasso.get().setLoggingEnabled(true);
             }
 
             @Override
@@ -134,6 +159,37 @@ public class SettingsActivity extends AppCompatActivity {
 
                 Uri resultUri = result.getUri();
                 String userId=mcurrentUser.getUid();
+
+                final File thumb_filepath = new File(resultUri.getPath());
+                final byte[] thumb_byte;
+
+
+               /* Bitmap bitmapImage = null;
+                try {
+                    bitmapImage = new Compressor(this)
+                            .setMaxHeight(200)
+                            .setMaxWidth(200)
+                            .setQuality(75)
+                            .compressToBitmap(thumb_filepath);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                if ( bitmapImage != null) {
+                    bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                }
+                thumb_byte = baos.toByteArray();*/
+
+
+                StorageReference filepath = mProfileImage.child("profile_images").child(userId + ".jpg");
+                //path to store thumb images
+                final StorageReference thumb_filePath = mProfileImage.child("profile_images")
+                        .child("thumb_image").child(userId + ".jpg");
+
+
+
+
                 StorageReference filePath = mProfileImage.child("profile_images").child(userId + ".jpg");
                 filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override

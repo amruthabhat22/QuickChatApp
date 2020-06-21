@@ -10,15 +10,15 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/settings_display_pic"
-        android:layout_width="254dp"
-        android:layout_height="wrap_content"
+        android:layout_width="500dp"
+        android:layout_height="195dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="67dp"
-        android:layout_marginEnd="77dp"
+        android:layout_marginStart="92dp"
+        android:layout_marginTop="77dp"
+        android:layout_marginEnd="92dp"
         android:background="#FFFFFF"
         android:src="@drawable/dpp" />
 
@@ -29,14 +29,14 @@
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_marginBottom="350dp"
-        android:background="@color/colorPrimary"
         android:gravity="center"
         android:maxLines="1"
         android:text="@string/display_name"
         android:textAlignment="center"
         android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp" />
+        android:textColor="#000000"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/settings_status"
@@ -45,13 +45,13 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="273dp"
-        android:background="@color/colorPrimary"
         android:gravity="center"
         android:maxLines="1"
         android:text="@string/hey_there_i_m_using_quickchat_app"
         android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="italic" />
 
     <Button
         android:id="@+id/settings_change_img"
@@ -64,11 +64,11 @@
 
     <Button
         android:id="@+id/settings_change_status"
-        android:layout_width="152dp"
+        android:layout_width="135dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="84dp"
+        android:layout_marginBottom="86dp"
         android:background="#D81818"
         android:text="@string/change_status" />
 

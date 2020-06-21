@@ -31,6 +31,7 @@
     <string name="login">Login</string>
     <string name="hint">hint</string>
     <string name="save_changes">Save Changes</string>
+    <string name="display_id">Display_id</string>
 
 
 </resources>
