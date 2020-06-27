@@ -62,7 +62,8 @@
         android:layout_marginBottom="167dp"
         android:background="@drawable/oval"
         android:backgroundTint="@color/colorAccent"
-        android:text="@string/change_image"></Button>
+        android:text="@string/change_image"
+        android:textColor="#FFFFFF"></Button>
         <!--android:clickable="true"
         android:onClick="changeImage"-->
 
@@ -75,7 +76,8 @@
         android:layout_marginBottom="86dp"
         android:background="@drawable/oval"
         android:backgroundTint="@color/colorAccent"
-        android:text="@string/change_status"></Button>
+        android:text="@string/change_status"
+        android:textColor="#FFFFFF"></Button>
        <!-- android:clickable="true"
         android:onClick="changeStatus"-->
 
