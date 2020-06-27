@@ -14,11 +14,15 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class LoginActivity extends AppCompatActivity {
     private TextInputLayout mlogemail,mlogpassword;
@@ -26,6 +30,8 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog mlogdialog;
     private Toolbar mlogbar;
     private FirebaseAuth mAuth;
+    private DatabaseReference mUserDatabase;
+
 
 
     @Override
@@ -33,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Initialize Firebase Auth
+        mUserDatabase= FirebaseDatabase.getInstance().getReference().child("user");
         mAuth = FirebaseAuth.getInstance();
         mlogemail=(TextInputLayout)findViewById(R.id.login_email);
         mlogpassword=(TextInputLayout)findViewById(R.id.login_passwd);
@@ -40,8 +47,8 @@ public class LoginActivity extends AppCompatActivity {
         mlogdialog=new ProgressDialog(LoginActivity.this);
         mlogbar=(Toolbar)findViewById(R.id.login_toolbar);
         setSupportActionBar(mlogbar);
-        getSupportActionBar().setTitle("Login");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       getSupportActionBar().setTitle("Login");
+       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 mlogin.setOnClickListener(new View.OnClickListener() {
     @Override
@@ -69,10 +76,24 @@ mlogin.setOnClickListener(new View.OnClickListener() {
           public void onComplete(@NonNull Task<AuthResult> task) {
               if (task.isSuccessful()){
                   mlogdialog.dismiss();
-                  Intent mainintent=new Intent(LoginActivity.this,MainActivity.class);
-                  mainintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                  startActivity(mainintent);
-                  finish();
+
+                  String currentUID=mAuth.getCurrentUser().getUid();
+                  String deviceToken= FirebaseInstanceId.getInstance().getToken();
+
+                  mUserDatabase.child(currentUID).child("device_token").setValue(deviceToken).addOnSuccessListener(new OnSuccessListener<Void>() {
+                      @Override
+                      public void onSuccess(Void aVoid) {
+
+                          Intent mainintent=new Intent(LoginActivity.this,MainActivity.class);
+                          mainintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                          startActivity(mainintent);
+                          finish();
+
+                      }
+                  });
+
+
+
               }else {
 
                   /*Log.w("loginmsg","sigInWithEmail:failure",task.getException());

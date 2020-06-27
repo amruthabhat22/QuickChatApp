@@ -7,21 +7,22 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".QuickChat"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ProfileActivity"></activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:parentActivityName=".StartActivity"></activity>
+        <activity android:name=".ProfileActivity" />
         <activity
             android:name=".UsersActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".StartActivity" />
-        <activity android:name=".SettingsActivity" /> <!-- <activity android:name=".LoginActivity" /> -->
-        <activity
-            android:name=".RegisterActivity"
-            android:parentActivityName=".StartActivity" />
+        <activity android:name=".SettingsActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

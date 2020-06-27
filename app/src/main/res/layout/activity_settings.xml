@@ -60,7 +60,11 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="167dp"
-        android:text="@string/change_image" />
+        android:background="@drawable/oval"
+        android:backgroundTint="@color/colorAccent"
+        android:text="@string/change_image"></Button>
+        <!--android:clickable="true"
+        android:onClick="changeImage"-->
 
     <Button
         android:id="@+id/settings_change_status"
@@ -69,8 +73,11 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="86dp"
-        android:background="#D81818"
-        android:text="@string/change_status" />
+        android:background="@drawable/oval"
+        android:backgroundTint="@color/colorAccent"
+        android:text="@string/change_status"></Button>
+       <!-- android:clickable="true"
+        android:onClick="changeStatus"-->
 
 </RelativeLayout>
 
